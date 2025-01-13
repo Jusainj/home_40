@@ -3,15 +3,18 @@ import time
 import random
 import mysql.connector
 from datetime import datetime
+from dotenv import load_dotenv
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
+load_dotenv(os.path.abspath('../.env'))
+
 # MySQL Database configuration
 MYSQL_CONFIG = {
-    "host": "mysql",  # Use the service name 'mysql' as the host
-    "user": "your_user",
-    "password": "machichdannmal",
-    "database": "sensor_data"
+    "host": os.getenv("MYSQL_HOST"),
+    "user": os.getenv("MYSQL_USER"),
+    "password": os.getenv("MYSQL_PASSWORD"),
+    "database": os.getenv("MYSQL_DATABASE"),
 }
 
 # Simulation parameters

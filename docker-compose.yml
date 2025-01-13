@@ -4,10 +4,17 @@ services:
   sensor_simulation:
     build:
       context: ./sensor_simulation
+    environment:
+      - MYSQL_HOST=${MYSQL_HOST}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
     container_name: sensor_simulation
     volumes:
       - ./shared_data:/shared_data
     restart: always
+    depends_on:
+      - mysql  # Ensure MySQL starts before sensor_simulation
 
   grafana:
     image: grafana/grafana
@@ -17,11 +24,24 @@ services:
     volumes:
       - grafana_data:/var/lib/grafana
       - ./shared_data:/shared_data
-      - ./custom_grafana.ini:/etc/grafana/grafana.ini  # Mount the custom configuration
-    environment:
-      - GF_INSTALL_PLUGINS=marcusolsson-csv-datasource
     restart: always
-    privileged: true  # Enables privileged mode
+    privileged: true  # Enables privileged mode (not reccomended for production)
+
+  mysql:
+    image: mysql:latest
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql_data:/var/lib/mysql  # Persist MySQL data to local directory
+      #- ./mysql_data/init.sql:/docker-entrypoint-initdb.d/init.sql  # Run init.sql on startup
+    restart: always
 
 volumes:
   grafana_data:
+  mysql_data:

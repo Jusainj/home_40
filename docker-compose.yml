@@ -8,6 +8,8 @@ services:
     volumes:
       - ./shared_data:/shared_data
     restart: always
+    depends_on:
+      - mysql  # Ensure MySQL starts before sensor_simulation
 
   grafana:
     image: grafana/grafana
@@ -23,5 +25,20 @@ services:
     restart: always
     privileged: true  # Enables privileged mode
 
+  mysql:
+    image: mysql:latest
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: machichdannmal
+      MYSQL_DATABASE: sensor_data
+      MYSQL_USER: your_user
+      MYSQL_PASSWORD: machichdannmal
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql # Persist MySQL data
+    restart: always
+
 volumes:
   grafana_data:
+  mysql_data:

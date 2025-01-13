@@ -1,18 +1,74 @@
 import os
 import time
 import random
-import pandas as pd
+import mysql.connector
 from datetime import datetime
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
-# File to store the simulated data
-current_path = os.getcwd()
-DATA_FILE = f"{current_path}/../shared_data/sensor_data.csv"
+# MySQL Database configuration
+MYSQL_CONFIG = {
+    "host": "mysql",  # Use the service name 'mysql' as the host
+    "user": "your_user",
+    "password": "machichdannmal",
+    "database": "sensor_data"
+}
 
 # Simulation parameters
 SIMULATION_DURATION = 60  # in seconds
 DATA_FREQUENCY = 1.5  # records per second (approximately)
+
+# Connect to MySQL
+def connect_to_mysql():
+    """Establishes a connection to the MySQL database."""
+    return mysql.connector.connect(**MYSQL_CONFIG)
+
+
+# Initialize MySQL storage
+def initialize_mysql_storage():
+    """Creates the necessary MySQL table if it doesn't exist."""
+    connection = connect_to_mysql()
+    cursor = connection.cursor()
+    cursor.execute(
+        """
+        CREATE TABLE IF NOT EXISTS pm_data (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            timestamp INT NOT NULL,
+            pm2_5 INT NOT NULL,
+            pm10 INT NOT NULL
+        )
+        """
+    )
+    connection.commit()
+    cursor.close()
+    connection.close()
+
+
+# Save data to MySQL
+def save_to_mysql(record):
+    """Inserts a record into the MySQL database."""
+    connection = connect_to_mysql()
+    cursor = connection.cursor()
+    cursor.execute(
+        "INSERT INTO pm_data (timestamp, pm2_5, pm10) VALUES (%s, %s, %s)",
+        (record["timestamp"], record["pm2_5"], record["pm10"])
+    )
+    connection.commit()
+    cursor.close()
+    connection.close()
+
+
+# Fetch data from MySQL for visualization
+def fetch_from_mysql():
+    """Fetches all data from MySQL."""
+    connection = connect_to_mysql()
+    cursor = connection.cursor()
+    cursor.execute("SELECT timestamp, pm2_5, pm10 FROM pm_data ORDER BY id")
+    data = cursor.fetchall()
+    cursor.close()
+    connection.close()
+    return data
+
 
 # Generate simulated data
 def simulate_data():
@@ -22,56 +78,39 @@ def simulate_data():
     timestamp = int(time.mktime(datetime.utcnow().timetuple()))
     return {"timestamp": timestamp, "pm2_5": pm2_5, "pm10": pm10}
 
-# Initialize CSV storage
-def initialize_storage():
-    """Creates an empty CSV file with appropriate headers if it doesn't exist."""
-    os.makedirs(os.path.dirname(DATA_FILE), exist_ok=True)
-    
-    # Create the file if it doesn't exist
-    if not os.path.exists(DATA_FILE) or os.stat(DATA_FILE).st_size == 0:
-        pd.DataFrame(columns=["timestamp", "pm2_5", "pm10"]).to_csv(DATA_FILE, index=False)
-
-    try:
-        pd.read_csv(DATA_FILE)  # Try to read the file to ensure it exists
-
-    except FileNotFoundError:
-        pd.DataFrame(columns=["timestamp", "pm2_5", "pm10"]).to_csv(DATA_FILE, index=False)
-
-# Save data to CSV
-def save_data(record):
-    """Appends a record to the CSV file."""
-    df = pd.DataFrame([record])
-    df.to_csv(DATA_FILE, mode="a", header=False, index=False)
 
 # Visualization setup
-def update_plot(frame, data, ax1, ax2):
+def update_plot(frame, mysql_data, ax1, ax2):
     """Updates the real-time plot."""
-    df = pd.read_csv(DATA_FILE)
-    if len(df) > 0:
-        # Extract latest data for plotting
-        timestamps = pd.to_datetime(df["timestamp"], unit="s")
-        ax1.clear()
-        ax2.clear()
-        ax1.plot(timestamps, df["pm2_5"], label="PM2.5 (µg/m³)", color="blue")
-        ax2.plot(timestamps, df["pm10"], label="PM10 (µg/m³)", color="green")
-        ax1.legend(loc="upper right")
-        ax2.legend(loc="upper right")
-        ax1.set_title("Real-time PM2.5 and PM10 Levels")
-        ax1.set_ylabel("PM2.5 (µg/m³)")
-        ax2.set_ylabel("PM10 (µg/m³)")
-        ax2.set_xlabel("Time")
-        plt.tight_layout()
+    mysql_timestamps, mysql_pm2_5, mysql_pm10 = zip(*mysql_data) if mysql_data else ([], [], [])
+
+    mysql_timestamps = [datetime.fromtimestamp(ts) for ts in mysql_timestamps]
+
+    ax1.clear()
+    ax2.clear()
+
+    ax1.plot(mysql_timestamps, mysql_pm2_5, label="MySQL PM2.5 (µg/m³)", color="blue")
+
+    ax2.plot(mysql_timestamps, mysql_pm10, label="MySQL PM10 (µg/m³)", color="green")
+
+    ax1.legend(loc="upper right")
+    ax2.legend(loc="upper right")
+    ax1.set_title("Real-time PM2.5 and PM10 Levels")
+    ax1.set_ylabel("PM2.5 (µg/m³)")
+    ax2.set_ylabel("PM10 (µg/m³)")
+    ax2.set_xlabel("Time")
+    plt.tight_layout()
 
 # Main simulation loop
 def run_simulation():
     """Runs the simulation for the specified duration."""
-    initialize_storage()
+    initialize_mysql_storage()
+    # influx_client = connect_to_influxdb()
     start_time = time.time()
-    
     print("Starting simulation...")
-    while True: # time.time() - start_time < SIMULATION_DURATION:
+    while time.time() - start_time < SIMULATION_DURATION:
         record = simulate_data()
-        save_data(record)
+        save_to_mysql(record)
         print(f"Recorded data: PM2.5={record['pm2_5']} µg/m³, PM10={record['pm10']} µg/m³")
         time.sleep(1 / DATA_FREQUENCY)
 
@@ -79,7 +118,14 @@ def run_simulation():
 def visualize_data():
     """Visualizes the data in real time."""
     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 6), sharex=True)
-    animation = FuncAnimation(fig, update_plot, fargs=(DATA_FILE, ax1, ax2), interval=1000)
+    # influx_client = connect_to_influxdb()
+
+    def update(frame):
+        mysql_data = fetch_from_mysql()
+        # influxdb_data = fetch_from_influxdb(influx_client)
+        update_plot(frame, mysql_data, ax1, ax2)
+
+    animation = FuncAnimation(fig, update, interval=1000)
     plt.show()
 
 if __name__ == "__main__":

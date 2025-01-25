@@ -20,7 +20,6 @@ MYSQL_CONFIG = {
 # Simulation parameters
 SIMULATION_DURATION = 60  # in seconds
 DATA_FREQUENCY = 1.5  # records per second (approximately)
-SENSOR_READ_FREQUENCY = 1  # requests per second
 
 
 # Connect to MySQL
@@ -84,14 +83,6 @@ def simulate_data():
     return {"timestamp": timestamp, "pm2_5": pm2_5, "pm10": pm10}
 
 
-def read_pms5003_data():
-    r"""Simulates PM2.5 and PM10 data."""
-    pm2_5 = random.randint(5, 150)  # Simulate PM2.5 values (5-150 µg/m³)
-    pm10 = random.randint(10, 200)  # Simulate PM10 values (10-200 µg/m³)
-    timestamp = int(time.mktime(datetime.utcnow().timetuple()))
-    return {"timestamp": timestamp, "pm2_5": pm2_5, "pm10": pm10}
-
-
 def run_simulation():
     """Runs the simulation for the specified duration."""
     initialize_mysql_storage()
@@ -103,18 +94,6 @@ def run_simulation():
         save_to_mysql(record)
         print(f"Recorded data: PM2.5={record['pm2_5']} µg/m³, PM10={record['pm10']} µg/m³")
         time.sleep(1 / DATA_FREQUENCY)
-
-
-def run_pms5003():
-    """Runs the simulation for the specified duration."""
-    initialize_mysql_storage()
-    # influx_client = connect_to_influxdb()
-    print("Starting retrieving sensor data...")
-    while True:
-        record = read_pms5003_data()
-        save_to_mysql(record)
-        print(f"Recorded data: PM2.5={record['pm2_5']} µg/m³, PM10={record['pm10']} µg/m³")
-        time.sleep(SENSOR_READ_FREQUENCY)
 
 
 if __name__ == "__main__":

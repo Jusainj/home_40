@@ -9,14 +9,13 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
 
-# MySQL Database configuration
+SENSOR_READ_FREQUENCY = 1  # request records per second
 MYSQL_CONFIG = {
     "host": os.getenv("MYSQL_HOST"),
     "user": os.getenv("MYSQL_USER"),
     "password": os.getenv("MYSQL_PASSWORD"),
     "database": os.getenv("MYSQL_DATABASE"),
 }
-
 
 # Connect to MySQL
 def connect_to_mysql():
@@ -98,7 +97,7 @@ def read_pms5003():
 
                     save_to_mysql(record)
                     print(f"Saved data: {record}")
-                time.sleep(1)
+                time.sleep(SENSOR_READ_FREQUENCY)
     except Exception as e:
         print(f"Error: {e}")
 

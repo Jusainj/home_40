@@ -1,20 +1,21 @@
 version: '3.8'
 
 services:
-  sensor_simulation:
+
+  pms5003:
     build:
-      context: ./sensor_simulation
+      context: ./pms5003
     environment:
       - MYSQL_HOST=${MYSQL_HOST}
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_DATABASE=${MYSQL_DATABASE}
-    container_name: sensor_simulation
+    container_name: pms5003
     volumes:
       - ./shared_data:/shared_data
     restart: always
     depends_on:
-      - mysql  # Ensure MySQL starts before sensor_simulation
+      - mysql  # Ensure MySQL starts before pms5003
 
   grafana:
     image: grafana/grafana

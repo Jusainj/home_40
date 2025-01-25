@@ -21,6 +21,7 @@ MYSQL_CONFIG = {
 SIMULATION_DURATION = 60  # in seconds
 DATA_FREQUENCY = 1.5  # records per second (approximately)
 
+
 # Connect to MySQL
 def connect_to_mysql():
     """Establishes a connection to the MySQL database."""
@@ -82,29 +83,6 @@ def simulate_data():
     return {"timestamp": timestamp, "pm2_5": pm2_5, "pm10": pm10}
 
 
-# Visualization setup
-def update_plot(frame, mysql_data, ax1, ax2):
-    """Updates the real-time plot."""
-    mysql_timestamps, mysql_pm2_5, mysql_pm10 = zip(*mysql_data) if mysql_data else ([], [], [])
-
-    mysql_timestamps = [datetime.fromtimestamp(ts) for ts in mysql_timestamps]
-
-    ax1.clear()
-    ax2.clear()
-
-    ax1.plot(mysql_timestamps, mysql_pm2_5, label="MySQL PM2.5 (µg/m³)", color="blue")
-
-    ax2.plot(mysql_timestamps, mysql_pm10, label="MySQL PM10 (µg/m³)", color="green")
-
-    ax1.legend(loc="upper right")
-    ax2.legend(loc="upper right")
-    ax1.set_title("Real-time PM2.5 and PM10 Levels")
-    ax1.set_ylabel("PM2.5 (µg/m³)")
-    ax2.set_ylabel("PM10 (µg/m³)")
-    ax2.set_xlabel("Time")
-    plt.tight_layout()
-
-# Main simulation loop
 def run_simulation():
     """Runs the simulation for the specified duration."""
     initialize_mysql_storage()
@@ -117,20 +95,8 @@ def run_simulation():
         print(f"Recorded data: PM2.5={record['pm2_5']} µg/m³, PM10={record['pm10']} µg/m³")
         time.sleep(1 / DATA_FREQUENCY)
 
-# Real-time visualization
-def visualize_data():
-    """Visualizes the data in real time."""
-    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 6), sharex=True)
-    # influx_client = connect_to_influxdb()
-
-    def update(frame):
-        mysql_data = fetch_from_mysql()
-        # influxdb_data = fetch_from_influxdb(influx_client)
-        update_plot(frame, mysql_data, ax1, ax2)
-
-    animation = FuncAnimation(fig, update, interval=1000)
-    plt.show()
 
 if __name__ == "__main__":
-    run_simulation()
-    visualize_data()
+    run_pms5003()
+    print(f"Finish pms5003 sensor data job.")
+

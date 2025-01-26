@@ -1,11 +1,12 @@
 # home_40
 
 ## Introduction
-1. Run python setup.py
+1. Run setup script to install required software, files and directories
 ```
-chmod +x setup.py
+chmod +x install.sh
+chmod +x scripts/*.sh
 
-./setup.py
+./install.sh
 ```
 
 2. To check: Does ./mysql_data, ./grafana_data folder exist in local project directory?

@@ -21,7 +21,7 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./grafana_data:/var/lib/grafana
+      - ./grafana/data:/var/lib/grafana
     restart: always
     privileged: true  # Enables privileged mode (not reccomended for production)
 

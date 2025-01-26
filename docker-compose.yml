@@ -11,8 +11,6 @@ services:
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_DATABASE=${MYSQL_DATABASE}
     container_name: pms5003
-    volumes:
-      - ./shared_data:/shared_data
     restart: always
     depends_on:
       - mysql  # Ensure MySQL starts before pms5003
@@ -23,8 +21,7 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - grafana_data:/var/lib/grafana
-      - ./shared_data:/shared_data
+      - ./grafana_data:/var/lib/grafana
     restart: always
     privileged: true  # Enables privileged mode (not reccomended for production)
 

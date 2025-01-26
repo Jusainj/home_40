@@ -1,10 +1,16 @@
 # home_40
 
 ## Introduction
-1. Add .env file and add mysql configs
-2. To check: Add ./mysql_data folder to persistent store data on local drive
+1. Run python setup.py
+```
+chmod +x setup.py
 
-3. Start docker compose
+./setup.py
+```
+
+2. To check: Does ./mysql_data, ./grafana_data folder exist in local project directory?
+
+3. Start docker compose is deteched mode
 ```
 docker-compose build
 

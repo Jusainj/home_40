@@ -78,9 +78,9 @@ def read_pms5003():
                     continue
 
                 if data[0:2] == b'\x42\x4d':
-                    pm1_0 = struct.unpack('>H', data[4:6])[0]
-                    pm2_5 = struct.unpack('>H', data[6:8])[0]
-                    pm10 = struct.unpack('>H', data[8:10])[0]
+                    pm2_5 = struct.unpack('>H', data[6:8])[0]  # PM2.5 value
+                    pm10 = struct.unpack('>H', data[8:10])[0]  # PM10 value
+                    pm1_0 = struct.unpack('>H', data[10:12])[0]  # PM1.0 value
                     particle_counts = struct.unpack('>HHHH', data[12:20])
 
                     timestamp = timestamp = int(time.time())

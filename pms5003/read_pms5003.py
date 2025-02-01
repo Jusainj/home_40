@@ -16,6 +16,7 @@ MYSQL_CONFIG = {
     "password": os.getenv("MYSQL_PASSWORD"),
     "database": os.getenv("MYSQL_DATABASE"),
 }
+serial_port = '/dev/ttyAMA0'
 
 # Connect to MySQL
 def connect_to_mysql():
@@ -70,7 +71,7 @@ def validate_checksum(data):
 # Read data from PMS5003
 def read_pms5003():
     try:
-        with serial.Serial('/dev/ttyAMA0', baudrate=9600, timeout=2) as ser:
+        with serial.Serial(serial_port, baudrate=9600, timeout=2) as ser:
             while True:
                 data = ser.read(32)
                 if not validate_checksum(data):

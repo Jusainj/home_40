@@ -10,8 +10,7 @@ create_env_file() {
   fi
 
   echo "Creating .env file..."
-  read -p "Enter MySQL host (default: localhost): " mysql_host
-  mysql_host=${mysql_host:-localhost}
+  mysql_host="mysql"
 
   read -p "Enter MySQL username (default: root): " mysql_user
   mysql_user=${mysql_user:-root}
@@ -42,6 +41,10 @@ ensure_directories() {
       echo "Directory already exists: $dir"
     fi
   done
+
+  # Set correct permissions
+  echo "Setting correct permissions..."
+  sudo chmod -v a+rwx grafana/data
 }
 
 # Main setup function

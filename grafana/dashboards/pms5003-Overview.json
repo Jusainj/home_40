@@ -18,7 +18,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 2,
+  "id": 3,
   "links": [],
   "panels": [
     {
@@ -31,16 +31,78 @@
           "color": {
             "mode": "thresholds"
           },
-          "mappings": [],
+          "fieldMinMax": false,
+          "mappings": [
+            {
+              "options": {
+                "from": 0,
+                "result": {
+                  "color": "dark-green",
+                  "index": 0,
+                  "text": "VERY GOOD"
+                },
+                "to": 5
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 6,
+                "result": {
+                  "color": "green",
+                  "index": 1,
+                  "text": "GOOD"
+                },
+                "to": 10
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 11,
+                "result": {
+                  "color": "yellow",
+                  "index": 2,
+                  "text": "OK"
+                },
+                "to": 25
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 26,
+                "result": {
+                  "color": "red",
+                  "index": 3,
+                  "text": "VERY BAD"
+                },
+                "to": 300
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 301,
+                "result": {
+                  "color": "dark-red",
+                  "index": 4,
+                  "text": "IT'S OVER.."
+                },
+                "to": 2000
+              },
+              "type": "range"
+            }
+          ],
           "thresholds": {
-            "mode": "absolute",
+            "mode": "percentage",
             "steps": [
               {
-                "color": "green",
+                "color": "dark-green",
                 "value": null
               },
               {
-                "color": "#6ED0E0",
+                "color": "green",
                 "value": 5
               },
               {
@@ -50,6 +112,10 @@
               {
                 "color": "red",
                 "value": 25
+              },
+              {
+                "color": "dark-red",
+                "value": 300
               }
             ]
           }
@@ -75,7 +141,7 @@
           "values": false
         },
         "showThresholdLabels": true,
-        "showThresholdMarkers": true,
+        "showThresholdMarkers": false,
         "sizing": "auto"
       },
       "pluginVersion": "11.5.0",
@@ -85,7 +151,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT\n  CASE \n    WHEN pm2_5 < 5 THEN \"VERY GOOD\"\n    WHEN (pm2_5 >= 5 AND pm2_5 < 10) THEN \"GOOD\"\n    WHEN (pm2_5 >= 10 AND pm2_5 < 25) THEN \"OK\"\n    ELSE \"VERY BAD\"\n  END AS state_pm2_5,\n  CASE \n    WHEN pm10 < 5 THEN \"VERY GOOD\"\n    WHEN pm10 >= 5 and pm10 < 10 THEN \"GOOD\"\n    WHEN pm10 >= 10 and pm10 < 25 THEN \"OK\"\n    ELSE \"VERY BAD\"\n  END AS state_pm10,\n  CASE \n    WHEN pm1_0 < 5 THEN \"VERY GOOD\"\n    WHEN pm1_0 >= 5 and pm1_0 < 10 THEN \"GOOD\"\n    WHEN pm1_0 >= 10 and pm1_0 < 25 THEN \"OK\"\n    ELSE \"VERY BAD\"\n  END AS state_pm1_0\nFROM sensor_data.pm_data\nORDER BY timestamp DESC\nLIMIT 1",
+          "rawSql": "SELECT\n  pm2_5 AS state_pm2_5, \n  pm10 AS state_pm10,\n  pm1_0 AS state_pm1_0\nFROM sensor_data.pm_data\nORDER BY timestamp DESC\nLIMIT 1",
           "refId": "A",
           "sql": {
             "columns": [
@@ -106,7 +172,8 @@
           }
         }
       ],
-      "title": "Current",
+      "title": "Current states",
+      "transparent": true,
       "type": "gauge"
     },
     {
@@ -165,7 +232,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT\n  pm1_0 AS current_pm1_0,\n  pm2_5 AS current_pm2_5,\n  pm10 AS current_pm10\nFROM sensor_data.pm_data\nORDER BY timestamp DESC\nLIMIT 1",
+          "rawSql": "SELECT\n  pm2_5 AS current_pm2_5,\n  pm10 AS current_pm10,\n  pm1_0 AS current_pm1_0\nFROM sensor_data.pm_data\nORDER BY timestamp DESC\nLIMIT 1",
           "refId": "A",
           "sql": {
             "columns": [
@@ -245,7 +312,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT\n  MAX(pm1_0) AS max_pm1_0,\n  MAX(pm2_5) AS max_pm2_5\nFROM sensor_data.pm_data",
+          "rawSql": "SELECT\n  MAX(pm1_0) AS max_pm1_0,\n  MAX(pm2_5) AS max_pm2_5\nFROM sensor_data.pm_data\nWHERE FROM_UNIXTIME(timestamp) >= NOW() - INTERVAL 1 DAY;",
           "refId": "A",
           "sql": {
             "columns": [
@@ -266,7 +333,7 @@
           }
         }
       ],
-      "title": "Panel Title",
+      "title": "MAX (last 24h)",
       "type": "gauge"
     },
     {
@@ -456,7 +523,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT\n  AVG(pm1_0) AS average_pm1_0,\n  AVG(pm2_5) AS average_pm2_5\nFROM sensor_data.pm_data",
+          "rawSql": "SELECT\n  AVG(pm1_0) AS average_pm1_0,\n  AVG(pm2_5) AS average_pm2_5\nFROM sensor_data.pm_data\nWHERE FROM_UNIXTIME(timestamp) >= NOW() - INTERVAL 1 DAY;",
           "refId": "A",
           "sql": {
             "columns": [
@@ -477,7 +544,7 @@
           }
         }
       ],
-      "title": "Panel Title",
+      "title": "Average (last 24h)",
       "type": "gauge"
     }
   ],
@@ -489,13 +556,13 @@
     "list": []
   },
   "time": {
-    "from": "now-1h",
+    "from": "now-15m",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
-  "title": "pms5003 - Overview_rev01",
-  "uid": "feba5wqdr8p34e",
-  "version": 2,
+  "title": "pms5003 - Overview_rev02",
+  "uid": "aebs1wwvillvke",
+  "version": 1,
   "weekStart": ""
 }

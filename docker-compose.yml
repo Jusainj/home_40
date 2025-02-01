@@ -14,6 +14,8 @@ services:
     restart: always
     depends_on:
       - mysql  # Ensure MySQL starts before pms5003
+    devices:
+      - "/dev/ttyS0:/dev/ttyS0"
 
   grafana:
     image: grafana/grafana
@@ -37,7 +39,6 @@ services:
       - "3306:3306"
     volumes:
       - ./mysql_data:/var/lib/mysql  # Persist MySQL data to local directory
-      #- ./mysql_data/init.sql:/docker-entrypoint-initdb.d/init.sql  # Run init.sql on startup
     restart: always
 
 volumes:

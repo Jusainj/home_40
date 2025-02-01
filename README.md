@@ -1,4 +1,5 @@
 # home_40
+![pms5003_architecture drawio](https://github.com/user-attachments/assets/0ee6824d-40eb-4bb8-a710-adb30a269c42)
 
 ## Introduction
 1. Run setup script to install required software, files and directories

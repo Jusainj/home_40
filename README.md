@@ -10,12 +10,11 @@ chmod +x scripts/*.sh
 ./install.sh
 ```
 
-2. To check: Does ./mysql_data, ./grafana_data folder exist in local project directory?
+2. To check: Does `./mysql_data` and `./grafana_data` folder exist in local project directory? If not, please create them.
 
-3. Start docker compose is deteched mode
+3. Start docker compose in detached mode
 ```
 docker-compose build
-
 docker-compose up -d
 
 ```

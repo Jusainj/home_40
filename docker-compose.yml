@@ -6,16 +6,46 @@ services:
     build:
       context: ./pms5003
     environment:
-      - MYSQL_HOST=${MYSQL_HOST}
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MQTT_BROKER=mqtt-broker
+      - MQTT_PORT=1883
     container_name: pms5003
     restart: always
     depends_on:
-      - mysql  # Ensure MySQL starts before pms5003
+      - mqtt-broker  # Ensure MySQL starts before pms5003
     devices:
       - "/dev/ttyS0:/dev/ttyS0"
+
+  mqtt-broker:
+    image: eclipse-mosquitto
+    container_name: mqtt-broker
+    ports:
+      - "1883:1883"
+    volumes:
+      - ./mosquitto/config:/mosquitto/config
+    restart: always
+
+  influxdb:
+    image: arm64v8/influxdb:1.8  # Für Raspberry Pi (ARM-Architektur)!
+    container_name: influxdb
+    ports:
+      - "8086:8086"
+    environment:
+      - INFLUXDB_DB=sensor_data
+      - INFLUXDB_ADMIN_USER=admin
+      - INFLUXDB_ADMIN_PASSWORD=adminpassword
+    volumes:
+      - ./influxdb:/var/lib/influxdb
+    restart: always
+
+  telegraf:
+    image: telegraf:latest
+    container_name: telegraf
+    depends_on:
+      - mqtt-broker
+      - influxdb
+    volumes:
+      - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf
+    restart: always
 
   grafana:
     image: grafana/grafana
@@ -27,20 +57,6 @@ services:
     restart: always
     privileged: true  # Enables privileged mode (not reccomended for production)
 
-  mysql:
-    image: mysql:latest
-    container_name: mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-    ports:
-      - "3306:3306"
-    volumes:
-      - ./mysql_data:/var/lib/mysql  # Persist MySQL data to local directory
-    restart: always
-
 volumes:
+  influxdb:
   grafana_data:
-  mysql_data:

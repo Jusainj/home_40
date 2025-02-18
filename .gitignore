@@ -1,5 +1,5 @@
- .env
-grafana/data
+.env
+grafana/data/
 influxdb/data
 influxdb/meta
-influxdb/wal/**
+influxdb/wal/

@@ -23,69 +23,63 @@
   "panels": [
     {
       "datasource": {
-        "type": "mysql",
-        "uid": "bebr1w7iodipsb"
+        "type": "influxdb",
+        "uid": "aec5rzl8slslce"
       },
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "thresholds"
           },
-          "fieldMinMax": false,
           "mappings": [
             {
               "options": {
                 "from": 0,
                 "result": {
-                  "color": "dark-green",
                   "index": 0,
                   "text": "VERY GOOD"
                 },
-                "to": 5
+                "to": 4
               },
               "type": "range"
             },
             {
               "options": {
-                "from": 6,
+                "from": 5,
                 "result": {
-                  "color": "green",
                   "index": 1,
                   "text": "GOOD"
                 },
-                "to": 10
+                "to": 9
               },
               "type": "range"
             },
             {
               "options": {
-                "from": 11,
+                "from": 10,
                 "result": {
-                  "color": "yellow",
                   "index": 2,
                   "text": "OK"
                 },
-                "to": 25
+                "to": 24
               },
               "type": "range"
             },
             {
               "options": {
-                "from": 26,
+                "from": 25,
                 "result": {
-                  "color": "red",
                   "index": 3,
                   "text": "VERY BAD"
                 },
-                "to": 300
+                "to": 299
               },
               "type": "range"
             },
             {
               "options": {
-                "from": 301,
+                "from": 300,
                 "result": {
-                  "color": "dark-red",
                   "index": 4,
                   "text": "IT'S OVER.."
                 },
@@ -95,7 +89,7 @@
             }
           ],
           "thresholds": {
-            "mode": "percentage",
+            "mode": "absolute",
             "steps": [
               {
                 "color": "dark-green",
@@ -106,7 +100,7 @@
                 "value": 5
               },
               {
-                "color": "#EAB839",
+                "color": "orange",
                 "value": 10
               },
               {
@@ -116,6 +110,10 @@
               {
                 "color": "dark-red",
                 "value": 300
+              },
+              {
+                "color": "dark-purple",
+                "value": 301
               }
             ]
           }
@@ -126,87 +124,6 @@
         "h": 6,
         "w": 16,
         "x": 0,
-        "y": 0
-      },
-      "id": 5,
-      "options": {
-        "minVizHeight": 75,
-        "minVizWidth": 75,
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "/.*/",
-          "values": false
-        },
-        "showThresholdLabels": true,
-        "showThresholdMarkers": false,
-        "sizing": "auto"
-      },
-      "pluginVersion": "11.5.0",
-      "targets": [
-        {
-          "dataset": "performance_schema",
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "SELECT\n  pm2_5 AS state_pm2_5, \n  pm10 AS state_pm10,\n  pm1_0 AS state_pm1_0\nFROM sensor_data.pm_data\nORDER BY timestamp DESC\nLIMIT 1",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
-        }
-      ],
-      "title": "Current states",
-      "transparent": true,
-      "type": "gauge"
-    },
-    {
-      "datasource": {
-        "type": "mysql",
-        "uid": "bebr1w7iodipsb"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 18,
-        "w": 4,
-        "x": 16,
         "y": 0
       },
       "id": 4,
@@ -221,45 +138,96 @@
           "fields": "",
           "values": false
         },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true,
+        "showThresholdLabels": true,
+        "showThresholdMarkers": false,
         "sizing": "auto"
       },
       "pluginVersion": "11.5.0",
       "targets": [
         {
-          "dataset": "performance_schema",
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "SELECT\n  pm2_5 AS current_pm2_5,\n  pm10 AS current_pm10,\n  pm1_0 AS current_pm1_0\nFROM sensor_data.pm_data\nORDER BY timestamp DESC\nLIMIT 1",
+          "alias": "pm2_5",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "aec5rzl8slslce"
+          },
+          "groupBy": [],
+          "hide": false,
+          "measurement": "mqtt_consumer",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "pm2_5"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "pm10",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "aec5rzl8slslce"
+          },
+          "groupBy": [],
+          "hide": false,
+          "measurement": "mqtt_consumer",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "C",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "pm10"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "pm1_0",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "aec5rzl8slslce"
+          },
+          "groupBy": [],
+          "hide": false,
+          "measurement": "mqtt_consumer",
+          "orderByTime": "ASC",
+          "policy": "default",
           "refId": "A",
-          "sql": {
-            "columns": [
+          "resultFormat": "time_series",
+          "select": [
+            [
               {
-                "parameters": [],
-                "type": "function"
+                "params": [
+                  "pm1_0"
+                ],
+                "type": "field"
               }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
+            ]
+          ],
+          "tags": []
         }
       ],
       "title": "Current",
+      "transparent": true,
       "type": "gauge"
     },
     {
       "datasource": {
-        "type": "mysql",
-        "uid": "bebr1w7iodipsb"
+        "type": "influxdb",
+        "uid": "aec5rzl8slslce"
       },
       "fieldConfig": {
         "defaults": {
@@ -284,12 +252,12 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 9,
+        "h": 12,
         "w": 3,
-        "x": 20,
+        "x": 16,
         "y": 0
       },
-      "id": 2,
+      "id": 6,
       "options": {
         "minVizHeight": 75,
         "minVizWidth": 75,
@@ -308,38 +276,139 @@
       "pluginVersion": "11.5.0",
       "targets": [
         {
-          "dataset": "performance_schema",
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "SELECT\n  MAX(pm1_0) AS max_pm1_0,\n  MAX(pm2_5) AS max_pm2_5\nFROM sensor_data.pm_data\nWHERE FROM_UNIXTIME(timestamp) >= NOW() - INTERVAL 1 DAY;",
+          "alias": "pm2_5",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "aec5rzl8slslce"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "mqtt_consumer",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "pm2_5"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "pm10",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "aec5rzl8slslce"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "mqtt_consumer",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "C",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "pm10"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "pm1_0",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "aec5rzl8slslce"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "mqtt_consumer",
+          "orderByTime": "ASC",
+          "policy": "default",
           "refId": "A",
-          "sql": {
-            "columns": [
+          "resultFormat": "time_series",
+          "select": [
+            [
               {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
+                "params": [
+                  "pm1_0"
+                ],
+                "type": "field"
+              },
               {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
+                "params": [],
+                "type": "last"
               }
-            ],
-            "limit": 50
-          }
+            ]
+          ],
+          "tags": []
         }
       ],
-      "title": "MAX (last 24h)",
+      "title": "Current",
       "type": "gauge"
     },
     {
       "datasource": {
-        "type": "mysql",
-        "uid": "bebr1w7iodipsb"
+        "type": "influxdb",
+        "uid": "aec5rzl8slslce"
       },
       "fieldConfig": {
         "defaults": {
@@ -393,9 +462,30 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unit": "conμgm3"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "co2"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "ppm"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-orange",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 12,
@@ -427,9 +517,41 @@
           },
           "editorMode": "code",
           "format": "table",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT mean(\"pm2_5\") AS \"pm2_5_avg\", \n       mean(\"pm10\") AS \"pm10_avg\"\nFROM \"mqtt_consumer\" \nWHERE \"sensor_id\" = 'pms5003' \nAND time > now() - 24h \nGROUP BY time(2m)  -- Grouping by X-minute intervals\nORDER BY time DESC\n",
           "rawQuery": true,
           "rawSql": "SELECT \n  timestamp AS time, \n  pm1_0,\n  pm2_5,\n  pm10\nFROM sensor_data.pm_data",
           "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
           "sql": {
             "columns": [
               {
@@ -461,7 +583,50 @@
             ],
             "limit": 50
           },
-          "table": "pm_data"
+          "table": "pm_data",
+          "tags": []
+        },
+        {
+          "alias": "co2",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "aec5rzl8slslce"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "1m"
+              ],
+              "type": "time"
+            }
+          ],
+          "hide": false,
+          "measurement": "mqtt_consumer",
+          "orderByTime": "DESC",
+          "policy": "default",
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "co2_ppm"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "time",
+              "operator": ">",
+              "value": "now() - 24h "
+            }
+          ]
         }
       ],
       "title": "Feinstaubsensor PMS5003",
@@ -469,8 +634,8 @@
     },
     {
       "datasource": {
-        "type": "mysql",
-        "uid": "bebr1w7iodipsb"
+        "type": "influxdb",
+        "uid": "aec5rzl8slslce"
       },
       "fieldConfig": {
         "defaults": {
@@ -495,12 +660,12 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 9,
+        "h": 6,
         "w": 3,
-        "x": 20,
-        "y": 9
+        "x": 16,
+        "y": 12
       },
-      "id": 3,
+      "id": 2,
       "options": {
         "minVizHeight": 75,
         "minVizWidth": 75,
@@ -519,50 +684,109 @@
       "pluginVersion": "11.5.0",
       "targets": [
         {
-          "dataset": "performance_schema",
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "SELECT\n  AVG(pm1_0) AS average_pm1_0,\n  AVG(pm2_5) AS average_pm2_5\nFROM sensor_data.pm_data\nWHERE FROM_UNIXTIME(timestamp) >= NOW() - INTERVAL 1 DAY;",
+          "alias": "pm2_5 max",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "aec5rzl8slslce"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "24h"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "mqtt_consumer",
+          "orderByTime": "ASC",
+          "policy": "default",
           "refId": "A",
-          "sql": {
-            "columns": [
+          "resultFormat": "time_series",
+          "select": [
+            [
               {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
+                "params": [
+                  "pm2_5"
+                ],
+                "type": "field"
+              },
               {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
+                "params": [],
+                "type": "max"
               }
-            ],
-            "limit": 50
-          }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "pm1_0 max",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "aec5rzl8slslce"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "24h"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "mqtt_consumer",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "pm1_0"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "max"
+              }
+            ]
+          ],
+          "tags": []
         }
       ],
-      "title": "Average (last 24h)",
+      "title": "MAX (last 24h)",
       "type": "gauge"
     }
   ],
   "preload": false,
-  "refresh": "5s",
+  "refresh": "30s",
   "schemaVersion": 40,
   "tags": [],
   "templating": {
     "list": []
   },
   "time": {
-    "from": "now-15m",
+    "from": "now-24h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
-  "title": "pms5003 - Overview_rev02",
-  "uid": "aebs1wwvillvke",
-  "version": 1,
+  "title": "pms5003 - Overview_rev03",
+  "uid": "aechm9korzugwa",
+  "version": 7,
   "weekStart": ""
 }

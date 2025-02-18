@@ -11,11 +11,11 @@ from dotenv import load_dotenv
 load_dotenv()
 
 SENSOR_READ_FREQUENCY = 1  # In Sekunden
-MQTT_BROKER = os.getenv("MQTT_BROKER", "localhost")
+MQTT_BROKER = os.getenv("MQTT_BROKER", "mqtt-broker")
 MQTT_PORT = int(os.getenv("MQTT_PORT", 1883))
 MQTT_TOPIC = "sensor/pm"
 
-serial_port = '/dev/ttyAMA0'
+serial_port = '/dev/ttyS0'
 
 # Setup MQTT client
 mqtt_client = mqtt.Client()

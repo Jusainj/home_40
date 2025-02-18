@@ -2,4 +2,4 @@
 grafana/data
 influxdb/data
 influxdb/meta
-influxdb/wal/**/*.wal
+influxdb/wal/**

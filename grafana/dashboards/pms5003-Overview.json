@@ -18,328 +18,13 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 3,
+  "id": 1,
   "links": [],
   "panels": [
     {
       "datasource": {
         "type": "mysql",
-        "uid": "bebr1w7iodipsb"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "fieldMinMax": false,
-          "mappings": [
-            {
-              "options": {
-                "from": 0,
-                "result": {
-                  "color": "dark-green",
-                  "index": 0,
-                  "text": "VERY GOOD"
-                },
-                "to": 5
-              },
-              "type": "range"
-            },
-            {
-              "options": {
-                "from": 6,
-                "result": {
-                  "color": "green",
-                  "index": 1,
-                  "text": "GOOD"
-                },
-                "to": 10
-              },
-              "type": "range"
-            },
-            {
-              "options": {
-                "from": 11,
-                "result": {
-                  "color": "yellow",
-                  "index": 2,
-                  "text": "OK"
-                },
-                "to": 25
-              },
-              "type": "range"
-            },
-            {
-              "options": {
-                "from": 26,
-                "result": {
-                  "color": "red",
-                  "index": 3,
-                  "text": "VERY BAD"
-                },
-                "to": 300
-              },
-              "type": "range"
-            },
-            {
-              "options": {
-                "from": 301,
-                "result": {
-                  "color": "dark-red",
-                  "index": 4,
-                  "text": "IT'S OVER.."
-                },
-                "to": 2000
-              },
-              "type": "range"
-            }
-          ],
-          "thresholds": {
-            "mode": "percentage",
-            "steps": [
-              {
-                "color": "dark-green",
-                "value": null
-              },
-              {
-                "color": "green",
-                "value": 5
-              },
-              {
-                "color": "#EAB839",
-                "value": 10
-              },
-              {
-                "color": "red",
-                "value": 25
-              },
-              {
-                "color": "dark-red",
-                "value": 300
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 16,
-        "x": 0,
-        "y": 0
-      },
-      "id": 5,
-      "options": {
-        "minVizHeight": 75,
-        "minVizWidth": 75,
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "/.*/",
-          "values": false
-        },
-        "showThresholdLabels": true,
-        "showThresholdMarkers": false,
-        "sizing": "auto"
-      },
-      "pluginVersion": "11.5.0",
-      "targets": [
-        {
-          "dataset": "performance_schema",
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "SELECT\n  pm2_5 AS state_pm2_5, \n  pm10 AS state_pm10,\n  pm1_0 AS state_pm1_0\nFROM sensor_data.pm_data\nORDER BY timestamp DESC\nLIMIT 1",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
-        }
-      ],
-      "title": "Current states",
-      "transparent": true,
-      "type": "gauge"
-    },
-    {
-      "datasource": {
-        "type": "mysql",
-        "uid": "bebr1w7iodipsb"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 18,
-        "w": 4,
-        "x": 16,
-        "y": 0
-      },
-      "id": 4,
-      "options": {
-        "minVizHeight": 75,
-        "minVizWidth": 75,
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true,
-        "sizing": "auto"
-      },
-      "pluginVersion": "11.5.0",
-      "targets": [
-        {
-          "dataset": "performance_schema",
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "SELECT\n  pm2_5 AS current_pm2_5,\n  pm10 AS current_pm10,\n  pm1_0 AS current_pm1_0\nFROM sensor_data.pm_data\nORDER BY timestamp DESC\nLIMIT 1",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
-        }
-      ],
-      "title": "Current",
-      "type": "gauge"
-    },
-    {
-      "datasource": {
-        "type": "mysql",
-        "uid": "bebr1w7iodipsb"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 9,
-        "w": 3,
-        "x": 20,
-        "y": 0
-      },
-      "id": 2,
-      "options": {
-        "minVizHeight": 75,
-        "minVizWidth": 75,
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true,
-        "sizing": "auto"
-      },
-      "pluginVersion": "11.5.0",
-      "targets": [
-        {
-          "dataset": "performance_schema",
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "SELECT\n  MAX(pm1_0) AS max_pm1_0,\n  MAX(pm2_5) AS max_pm2_5\nFROM sensor_data.pm_data\nWHERE FROM_UNIXTIME(timestamp) >= NOW() - INTERVAL 1 DAY;",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
-        }
-      ],
-      "title": "MAX (last 24h)",
-      "type": "gauge"
-    },
-    {
-      "datasource": {
-        "type": "mysql",
-        "uid": "bebr1w7iodipsb"
+        "uid": "ceb3akpwjvxtse"
       },
       "fieldConfig": {
         "defaults": {
@@ -350,7 +35,6 @@
             "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
-            "axisGridShow": false,
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
@@ -401,7 +85,7 @@
         "h": 12,
         "w": 16,
         "x": 0,
-        "y": 6
+        "y": 0
       },
       "id": 1,
       "options": {
@@ -412,12 +96,11 @@
           "showLegend": true
         },
         "tooltip": {
-          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
-      "pluginVersion": "11.5.0",
+      "pluginVersion": "11.4.0",
       "targets": [
         {
           "dataset": "sensor_data",
@@ -470,7 +153,7 @@
     {
       "datasource": {
         "type": "mysql",
-        "uid": "bebr1w7iodipsb"
+        "uid": "ceb3akpwjvxtse"
       },
       "fieldConfig": {
         "defaults": {
@@ -495,12 +178,12 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 9,
-        "w": 3,
-        "x": 20,
-        "y": 9
+        "h": 5,
+        "w": 8,
+        "x": 0,
+        "y": 12
       },
-      "id": 3,
+      "id": 2,
       "options": {
         "minVizHeight": 75,
         "minVizWidth": 75,
@@ -516,14 +199,14 @@
         "showThresholdMarkers": true,
         "sizing": "auto"
       },
-      "pluginVersion": "11.5.0",
+      "pluginVersion": "11.4.0",
       "targets": [
         {
           "dataset": "performance_schema",
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT\n  AVG(pm1_0) AS average_pm1_0,\n  AVG(pm2_5) AS average_pm2_5\nFROM sensor_data.pm_data\nWHERE FROM_UNIXTIME(timestamp) >= NOW() - INTERVAL 1 DAY;",
+          "rawSql": "SELECT\n  MAX(pm1_0) AS max_pm1_0,\n  MAX(pm2_5) AS max_pm2_5\nFROM sensor_data.pm_data",
           "refId": "A",
           "sql": {
             "columns": [
@@ -544,25 +227,104 @@
           }
         }
       ],
-      "title": "Average (last 24h)",
+      "title": "Panel Title",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "ceb3akpwjvxtse"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 8,
+        "x": 8,
+        "y": 12
+      },
+      "id": 3,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "11.4.0",
+      "targets": [
+        {
+          "dataset": "performance_schema",
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  AVG(pm1_0) AS average_pm1_0,\n  AVG(pm2_5) AS average_pm2_5\nFROM sensor_data.pm_data",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Panel Title",
       "type": "gauge"
     }
   ],
   "preload": false,
-  "refresh": "5s",
   "schemaVersion": 40,
   "tags": [],
   "templating": {
     "list": []
   },
   "time": {
-    "from": "now-15m",
+    "from": "now-6h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
-  "title": "pms5003 - Overview_rev02",
-  "uid": "aebs1wwvillvke",
-  "version": 1,
+  "title": "pms5003 - Overview",
+  "uid": "deb3hv5dg76dcb",
+  "version": 6,
   "weekStart": ""
 }

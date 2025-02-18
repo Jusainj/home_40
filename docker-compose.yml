@@ -2,6 +2,19 @@ version: '3.8'
 
 services:
 
+  co2_sensor:
+    build:
+      context: ./co2_sensor
+    environment:
+      - MQTT_BROKER=mqtt-broker
+      - MQTT_PORT=1883
+    container_name: co2_sensor
+    restart: always
+    depends_on:
+      - mqtt-broker
+    devices:
+      - "/dev/ttyUSB0:/dev/ttyUSB0"
+
   pms5003:
     build:
       context: ./pms5003
@@ -38,7 +51,9 @@ services:
     restart: always
 
   telegraf:
-    image: telegraf:latest
+    # image: telegraf:latest
+    build:
+      context: ./telegraf
     container_name: telegraf
     depends_on:
       - mqtt-broker

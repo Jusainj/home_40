@@ -1,3 +1,5 @@
-.env
-/mysql_data
-/grafana_data
+ .env
+grafana/data
+influxdb/data
+influxdb/meta
+influxdb/wal/**/*.wal

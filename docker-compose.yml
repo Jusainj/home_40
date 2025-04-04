@@ -40,6 +40,7 @@ services:
       - mqtt-broker
     devices:
       - "/dev/gpiomem:/dev/gpiomem"
+    privileged: true
 
   mqtt-broker:
     image: eclipse-mosquitto

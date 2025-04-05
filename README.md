@@ -1,7 +1,7 @@
 # home_40
 
-## Overview (OUTDATED)
-![pms5003_architecture drawio](https://github.com/user-attachments/assets/8c3f5529-514a-43fd-93db-3e867709ef37)
+## Overview
+![home40_architecture-version 2 0 drawio](https://github.com/user-attachments/assets/14b5d79b-569c-46d8-8e66-92621d9cabce)
 
 
 This setup enables the following functionalities:

@@ -4,7 +4,7 @@ services:
 
   co2_sensor:
     build:
-      context: ./co2_sensor
+      context: ./sensors/co2_sensor
     environment:
       - MQTT_BROKER=${MQTT_BROKER}
       - MQTT_PORT=${MQTT_PORT}
@@ -17,7 +17,7 @@ services:
 
   pms5003:
     build:
-      context: ./pms5003
+      context: ./sensors/pms5003
     environment:
       - MQTT_BROKER=${MQTT_BROKER}
       - MQTT_PORT=${MQTT_PORT}
@@ -27,6 +27,20 @@ services:
       - mqtt-broker
     devices:
       - "/dev/ttyS0:/dev/ttyS0"
+
+  dht11:
+    build:
+      context: ./sensors/dht11
+    environment:
+      - MQTT_BROKER=${MQTT_BROKER}
+      - MQTT_PORT=${MQTT_PORT}
+    container_name: dht11
+    restart: always
+    depends_on:
+      - mqtt-broker
+    devices:
+      - "/dev/gpiomem:/dev/gpiomem"
+    privileged: true
 
   mqtt-broker:
     image: eclipse-mosquitto
